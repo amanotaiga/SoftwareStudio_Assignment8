@@ -59,25 +59,11 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
         inputIP = (EditText) findViewById(R.id.edIP);
         ipSend = (Button) findViewById(R.id.ipButton);
         super.onCreate(savedInstanceState);
-        StrictMode.setThreadPolicy(
-                new StrictMode.ThreadPolicy.Builder()
-                        .detectDiskReads()
-                        .detectDiskWrites()
-                        .detectNetwork()
-                        .penaltyLog().build()
-        );
+
         ipSend.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /** Func() for setup page 1 **/
-                try {
-                    ipAdd = inputIP.getText().toString();
-                    MainActivity.this.clientSocket = new Socket(MainActivity.this.ipAdd, MainActivity.this .destinationPortNum);
-                    MainActivity.this.writer = new PrintWriter(new OutputStreamWriter(MainActivity.this.clientSocket.getOutputStream()));
-                    jumpToMainLayout();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                jumpToMainLayout();
             }
         });
     }
@@ -88,6 +74,7 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
     /**
      * Function for page 1 setup
      */
+
     public void jumpToMainLayout() {
         //TODO: Change layout to activity_main
         setContentView(R.layout.activity_main);
@@ -98,8 +85,8 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
             btn.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Log.d("Client", "Client Send");
-                  /*  Thread t = new thread();
-                    t.start();*/
+                    Thread t = new thread();
+                    t.start();
                     jumpToCalculateLayout();
                 }
             });
@@ -169,7 +156,6 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
                 break;
         }
         Log.d("debug", "ANS " + result);
-        outputStr = result + " ";
         String resultStr = num1 + " " + oper + " " + num2 + " = " + result;
         this.sendMsg(resultStr);
         jumpToResultLayout(resultStr);
@@ -196,30 +182,17 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
     }
 
 
-   /* class thread extends Thread {
+   class thread extends Thread {
         public void run() {
-            while (true) {
                 try {
-                    System.out.println("Client: Waiting to connect...");
-                    int serverPort = 2000;
-
-                    // Create socket connect server
-                    Socket socket = new Socket(ipAdd, serverPort);
-                    System.out.println("Connected!");
-
-                    // Create stream communicate with server
-                    OutputStream out = socket.getOutputStream();
-                    String strToSend = "Hi I'm client";
-                    byte[] sendStrByte = new byte[1024];
-
-                        System.arraycopy(strToSend.getBytes(), 0, sendStrByte, 0, strToSend.length());
-                        out.write(sendStrByte);
-                        strToSend = outputStr + " ";
+                    ipAdd = inputIP.getText().toString();
+                    MainActivity.this.clientSocket = new Socket(MainActivity.this.ipAdd, MainActivity.this .destinationPortNum);
+                    MainActivity.this.writer = new PrintWriter(new OutputStreamWriter(MainActivity.this.clientSocket.getOutputStream()));
+                    sendMsg("Hi ,I'm client");
 
                 } catch (Exception e) {
                     System.out.println("Error" + e.getMessage());
                 }
-            }
         }
-    }*/
+    }
 }
